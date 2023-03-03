@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "TaskBarView.h"
 
 // CWordHelperDlg 对话框
 class CWordHelperDlg : public CDialogEx
@@ -20,6 +21,8 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
 
+private:
+	CTaskBarView m_wndTaskBarView;
 
 // 实现
 protected:
