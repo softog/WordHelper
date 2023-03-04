@@ -11,3 +11,8 @@
 #include "framework.h"
 
 #endif //PCH_H
+
+// 任务栏重新调整位置
+#define MY_TIMER_TASKBAR_REPOSITION 250
+#define MY_TIMER_TASKBAR_REPOSITION_ID (WM_USER+1)
+

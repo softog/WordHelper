@@ -6,6 +6,8 @@
 #include "TaskBarView.h"
 
 
+
+
 // CTaskBarView
 
 IMPLEMENT_DYNAMIC(CTaskBarView, CWnd)
@@ -29,6 +31,8 @@ BOOL CTaskBarView::Create()
         return FALSE;
     }
     AdjustWindowPos();
+
+    SetTimer(MY_TIMER_TASKBAR_REPOSITION_ID, MY_TIMER_TASKBAR_REPOSITION, NULL);
     return bCreate;
 }
 
@@ -50,12 +54,23 @@ BOOL CTaskBarView::AdjustWindowPos()
 
 BEGIN_MESSAGE_MAP(CTaskBarView, CWnd)
     ON_WM_PAINT()
+    ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
 
 void CTaskBarView::OnPaint()
 {
+
     CPaintDC dc(this); // device context for painting
     dc.TextOut(0, 0, _T("Hello World!"));
+}
+
+
+void CTaskBarView::OnTimer(UINT_PTR nIDEvent)
+{
+    if (nIDEvent == MY_TIMER_TASKBAR_REPOSITION_ID) {
+        AdjustWindowPos();
+    }
+    CWnd::OnTimer(nIDEvent);
 }
