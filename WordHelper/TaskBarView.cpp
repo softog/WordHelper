@@ -26,10 +26,14 @@ BOOL CTaskBarView::Create()
     m_hTaskbar = ::FindWindow(L"Shell_TrayWnd", NULL); //寻找类名是Shell_TrayWnd的窗口句柄
     m_hNotify = ::FindWindowEx(m_hTaskbar, 0, L"TrayNotifyWnd", NULL);
 
-    BOOL bCreate = __super::Create(nullptr, nullptr, WS_CHILD | WS_VISIBLE, CRect(0, 0, 100, 32), CWnd::FromHandle(m_hTaskbar), 0, nullptr);
+    // 字体
+    m_font.Attach((HFONT)GetStockObject(DEFAULT_GUI_FONT));
+
+    BOOL bCreate = __super::Create(nullptr, nullptr, WS_CHILD | WS_VISIBLE, CRect(0, 0, 150, 32), CWnd::FromHandle(m_hTaskbar), 0, nullptr);
     if (!bCreate) {
         return FALSE;
     }
+
     AdjustWindowPos();
 
     SetTimer(MY_TIMER_TASKBAR_REPOSITION_ID, MY_TIMER_TASKBAR_REPOSITION, NULL);
@@ -48,6 +52,7 @@ BOOL CTaskBarView::AdjustWindowPos()
     SetWindowPos(NULL, rcNotify.left - 100, (rcTaskbar.Height() - 32) / 2, 0, 0, SWP_NOSIZE);
     Invalidate(FALSE);
 
+
     return TRUE;
 }
 
@@ -61,9 +66,13 @@ END_MESSAGE_MAP()
 
 void CTaskBarView::OnPaint()
 {
-
     CPaintDC dc(this); // device context for painting
-    dc.TextOut(0, 0, _T("Hello World!"));
+    CFont* pOldFont = dc.SelectObject(&m_font);
+
+    dc.DrawText(_T("one"), CRect(0, 0, 150, 32/2), DT_SINGLELINE | DT_LEFT | DT_END_ELLIPSIS);
+    dc.DrawText(_T("num.（基数）一，第一"), CRect(0, 32/2, 150, 32), DT_SINGLELINE | DT_LEFT | DT_END_ELLIPSIS);
+
+    dc.SelectObject(pOldFont);
 }
 
 

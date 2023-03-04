@@ -23,6 +23,7 @@ private:
 private:
 	HWND m_hTaskbar;	// 任务栏窗口句柄
 	HWND m_hNotify;     // 任务栏通知区域的句柄
+	CFont m_font;
 
 public:
 	afx_msg void OnPaint();
