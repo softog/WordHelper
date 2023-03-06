@@ -4,6 +4,9 @@
 #include "pch.h"
 #include "WordHelper.h"
 #include "TaskBarView.h"
+#include <string>
+using namespace std;
+#include <cpr/cpr.h>
 
 
 
@@ -52,7 +55,12 @@ BOOL CTaskBarView::AdjustWindowPos()
     SetWindowPos(NULL, rcNotify.left - 100, (rcTaskbar.Height() - 32) / 2, 0, 0, SWP_NOSIZE);
     Invalidate(FALSE);
 
-
+    cpr::Response r = cpr::Get(cpr::Url{ "https://ip.clearseve.com/api" },
+        cpr::Authentication{ "user", "pass", cpr::AuthMode::BASIC },
+        cpr::Parameters{ {"anon", "true"}, {"key", "value"} });
+    r.status_code;                  // 200
+    r.header["content-type"];       // application/json; charset=utf-8
+    r.text;                         // JSON text string
     return TRUE;
 }
 
@@ -69,10 +77,12 @@ void CTaskBarView::OnPaint()
     CPaintDC dc(this); // device context for painting
     CFont* pOldFont = dc.SelectObject(&m_font);
 
-    dc.DrawText(_T("one"), CRect(0, 0, 150, 32/2), DT_SINGLELINE | DT_LEFT | DT_END_ELLIPSIS);
-    dc.DrawText(_T("num.（基数）一，第一"), CRect(0, 32/2, 150, 32), DT_SINGLELINE | DT_LEFT | DT_END_ELLIPSIS);
+    dc.DrawText(_T("one"), CRect(0, 0, 150, 32 / 2), DT_SINGLELINE | DT_LEFT | DT_END_ELLIPSIS);
+    dc.DrawText(_T("pron.一个人,任何人,本人，人家,东西;"), CRect(0, 32 / 2, 150, 32), DT_SINGLELINE | DT_LEFT | DT_END_ELLIPSIS);
 
     dc.SelectObject(pOldFont);
+
+
 }
 
 
