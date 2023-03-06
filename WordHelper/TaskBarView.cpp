@@ -34,8 +34,12 @@ BOOL CTaskBarView::Create()
     // 字体
     m_font.Attach((HFONT)GetStockObject(DEFAULT_GUI_FONT));
 
+    TCHAR szExePath[MAX_PATH] = { 0 };
+    GetModuleFileName(NULL, szExePath, MAX_PATH);
+    CAtlString strPath = CUtils::PathToFolderPath(szExePath);
+
     // 加载单词文件
-    CFile file(_T("Data\\新概念英语第一册.json"), CFile::modeRead);
+    CFile file(strPath + _T("Data\\新概念英语第一册.json"), CFile::modeRead);
     char* pszBuf = new char[file.GetLength() + 1];
     ZeroMemory(pszBuf, file.GetLength() + 1);
     file.Read(pszBuf, file.GetLength());
@@ -46,24 +50,37 @@ BOOL CTaskBarView::Create()
     if (!pJsonList) {
         return FALSE;
     }
-    CJsonHelperPtr pJsonList1 = pJsonList->GetJsonObject( "Lesson1");
-    if (!pJsonList1) {
-        return FALSE;
+    int nCount = pJsonList->GetArrayCount();
+    for (size_t i = 0; i < nCount; i++)
+    {
+        CJsonHelperPtr jsonItem = pJsonList->GetArrayItemAt(i);
+        string name = jsonItem->Get("name", "");
+        CJsonHelperPtr words = jsonItem->GetJsonArray("words");
+
+        int nWordCount = words->GetArrayCount();
+        for (size_t i = 0; i < nWordCount; i++) {
+
+        }
     }
-   //  CJsonHelperPtr pJsonList = m_jsonRoot.GetJsonArray("Lesson1");
-   //  if (!pJsonList) {
-   //      return FALSE;
-   //  }
 
-  
-    // string str = item1->Get("key","");
-
-
-    // cJSON* pListJson = cJSON_GetObjectItem(pRootJson, "list");
-    // if (pListJson == NULL) {
-    //     return false;
+    // CJsonHelperPtr pJsonList1 = pJsonList->GetJsonObject("Lesson1");
+    // if (!pJsonList1) {
+    //     return FALSE;
     // }
-    //
+    //  CJsonHelperPtr pJsonList = m_jsonRoot.GetJsonArray("Lesson1");
+    //  if (!pJsonList) {
+    //      return FALSE;
+    //  }
+
+
+     // string str = item1->Get("key","");
+
+
+     // cJSON* pListJson = cJSON_GetObjectItem(pRootJson, "list");
+     // if (pListJson == NULL) {
+     //     return false;
+     // }
+     //
 
     BOOL bCreate = __super::Create(nullptr, nullptr, WS_CHILD | WS_VISIBLE, CRect(0, 0, 150 * CUtils::GetDPIScale(), rcTaskbar.Height() * CUtils::GetDPIScale()), CWnd::FromHandle(m_hTaskbar), 0, nullptr);
     if (!bCreate) {

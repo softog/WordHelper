@@ -49,6 +49,18 @@ BOOL CUtils::SetProcessDPIAware()
 
 }
 
+CAtlString CUtils::PathToFolderPath(LPCTSTR pszFullPath)
+{
+    CAtlString strTemp(pszFullPath);
+    int nPos = -1;
+    nPos = strTemp.ReverseFind(_T('\\'));
+    if (-1 == nPos)
+        nPos = strTemp.ReverseFind(_T('/'));
+    if (-1 == nPos)
+        return _T("");
+    return strTemp.Left(nPos + 1);
+}
+
 CAtlStringA CUtils::UnicodeToAnsi(LPCWSTR pszContent)
 {
     CAtlStringA anscii;
