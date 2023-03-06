@@ -39,6 +39,9 @@
     <ClInclude Include="TaskBarView.h">
       <Filter>任务栏</Filter>
     </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WordHelper.cpp">
@@ -52,6 +55,9 @@
     </ClCompile>
     <ClCompile Include="TaskBarView.cpp">
       <Filter>任务栏</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

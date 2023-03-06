@@ -116,6 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -189,6 +190,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TaskBarView.h" />
+    <ClInclude Include="Utils.h" />
     <ClInclude Include="WordHelper.h" />
     <ClInclude Include="WordHelperDlg.h" />
   </ItemGroup>
@@ -200,6 +202,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TaskBarView.cpp" />
+    <ClCompile Include="Utils.cpp" />
     <ClCompile Include="WordHelper.cpp" />
     <ClCompile Include="WordHelperDlg.cpp" />
   </ItemGroup>

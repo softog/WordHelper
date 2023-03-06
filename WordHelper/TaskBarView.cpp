@@ -32,7 +32,7 @@ BOOL CTaskBarView::Create()
     // 字体
     m_font.Attach((HFONT)GetStockObject(DEFAULT_GUI_FONT));
 
-    BOOL bCreate = __super::Create(nullptr, nullptr, WS_CHILD | WS_VISIBLE, CRect(0, 0, 150, 32), CWnd::FromHandle(m_hTaskbar), 0, nullptr);
+    BOOL bCreate = __super::Create(nullptr, nullptr, WS_CHILD | WS_VISIBLE, CRect(0, 0, 150 * CUtils::GetDPIScale(), 32 * CUtils::GetDPIScale()), CWnd::FromHandle(m_hTaskbar), 0, nullptr);
     if (!bCreate) {
         return FALSE;
     }
@@ -48,19 +48,20 @@ BOOL CTaskBarView::AdjustWindowPos()
     if (this->GetSafeHwnd() == NULL || !IsWindow(this->GetSafeHwnd()))
         return false;
 
-    CRect rcTaskbar, rcNotify;
+    CRect rcTaskbar, rcNotify, rcClient;
     ::GetWindowRect(m_hTaskbar, rcTaskbar);   //获得任务栏的矩形区域
     ::GetWindowRect(m_hNotify, rcNotify);
+    GetWindowRect(rcClient);
 
-    SetWindowPos(NULL, rcNotify.left - 100, (rcTaskbar.Height() - 32) / 2, 0, 0, SWP_NOSIZE);
+    SetWindowPos(NULL, rcNotify.left - rcClient.Width(), (rcTaskbar.Height() - rcClient.Height()) / 2, 0, 0, SWP_NOSIZE);
     Invalidate(FALSE);
 
-    cpr::Response r = cpr::Get(cpr::Url{ "https://ip.clearseve.com/api" },
-        cpr::Authentication{ "user", "pass", cpr::AuthMode::BASIC },
-        cpr::Parameters{ {"anon", "true"}, {"key", "value"} });
-    r.status_code;                  // 200
-    r.header["content-type"];       // application/json; charset=utf-8
-    r.text;                         // JSON text string
+    //  cpr::Response r = cpr::Get(cpr::Url{ "https://ip.clearseve.com/api" },
+    //      cpr::Authentication{ "user", "pass", cpr::AuthMode::BASIC },
+    //      cpr::Parameters{ {"anon", "true"}, {"key", "value"} });
+    //  r.status_code;                  // 200
+    //  r.header["content-type"];       // application/json; charset=utf-8
+    //  r.text;                         // JSON text string
     return TRUE;
 }
 
@@ -75,10 +76,14 @@ END_MESSAGE_MAP()
 void CTaskBarView::OnPaint()
 {
     CPaintDC dc(this); // device context for painting
+
+    CRect rcClient;
+    GetWindowRect(rcClient);
+
     CFont* pOldFont = dc.SelectObject(&m_font);
 
-    dc.DrawText(_T("one"), CRect(0, 0, 150, 32 / 2), DT_SINGLELINE | DT_LEFT | DT_END_ELLIPSIS);
-    dc.DrawText(_T("pron.一个人,任何人,本人，人家,东西;"), CRect(0, 32 / 2, 150, 32), DT_SINGLELINE | DT_LEFT | DT_END_ELLIPSIS);
+    dc.DrawText(_T("one"), CRect(0, 0, 150 * CUtils::GetDPIScale(), rcClient.Height() / 2), DT_SINGLELINE | DT_LEFT | DT_END_ELLIPSIS);
+    dc.DrawText(_T("pron.一个人,任何人,本人，人家,东西;"), CRect(0, rcClient.Height() / 2, 150 * CUtils::GetDPIScale(), rcClient.Height()), DT_SINGLELINE | DT_LEFT | DT_END_ELLIPSIS);
 
     dc.SelectObject(pOldFont);
 
