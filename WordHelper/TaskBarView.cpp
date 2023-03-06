@@ -29,10 +29,13 @@ BOOL CTaskBarView::Create()
     m_hTaskbar = ::FindWindow(L"Shell_TrayWnd", NULL); //寻找类名是Shell_TrayWnd的窗口句柄
     m_hNotify = ::FindWindowEx(m_hTaskbar, 0, L"TrayNotifyWnd", NULL);
 
+    CRect rcTaskbar;
+    ::GetWindowRect(m_hTaskbar, rcTaskbar);   //获得任务栏的矩形区域
+
     // 字体
     m_font.Attach((HFONT)GetStockObject(DEFAULT_GUI_FONT));
 
-    BOOL bCreate = __super::Create(nullptr, nullptr, WS_CHILD | WS_VISIBLE, CRect(0, 0, 150 * CUtils::GetDPIScale(), 32 * CUtils::GetDPIScale()), CWnd::FromHandle(m_hTaskbar), 0, nullptr);
+    BOOL bCreate = __super::Create(nullptr, nullptr, WS_CHILD | WS_VISIBLE, CRect(0, 0, 150 * CUtils::GetDPIScale(), rcTaskbar.Height() * CUtils::GetDPIScale()), CWnd::FromHandle(m_hTaskbar), 0, nullptr);
     if (!bCreate) {
         return FALSE;
     }
@@ -81,13 +84,23 @@ void CTaskBarView::OnPaint()
     GetWindowRect(rcClient);
 
     CFont* pOldFont = dc.SelectObject(&m_font);
+    CString strWord = _T("test");
+    CString strDescribe = _T("你好你好你好你好你好你好好你好你好你好你好你好你好好你好你好你好你好你好你好好");
 
-    dc.DrawText(_T("one"), CRect(0, 0, 150 * CUtils::GetDPIScale(), rcClient.Height() / 2), DT_SINGLELINE | DT_LEFT | DT_END_ELLIPSIS);
-    dc.DrawText(_T("pron.一个人,任何人,本人，人家,东西;"), CRect(0, rcClient.Height() / 2, 150 * CUtils::GetDPIScale(), rcClient.Height()), DT_SINGLELINE | DT_LEFT | DT_END_ELLIPSIS);
+    // 计算文字绘制的开始位置
+    SIZE size = dc.GetTextExtent(strDescribe);
+    int nStart = (rcClient.Height() - size.cy * 2) / 2;
+    if (size.cx > rcClient.Width()) {
+        nStart = (rcClient.Height() - size.cy * 3) / 2;
+    }
+
+    //dc.SetBkMode(TRANSPARENT);
+    dc.SetTextColor(GetSysColor(COLOR_MENUTEXT));
+    dc.DrawText(strWord, CRect(0, nStart, rcClient.Width(), nStart + size.cy), DT_SINGLELINE | DT_LEFT | DT_END_ELLIPSIS);
+    dc.DrawText(strDescribe, CRect(0, nStart + size.cy + 1, rcClient.Width(), nStart + size.cy * 3), DT_WORDBREAK | DT_LEFT | DT_END_ELLIPSIS);
+
 
     dc.SelectObject(pOldFont);
-
-
 }
 
 
