@@ -186,15 +186,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="JsonHelper.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TaskBarView.h" />
+    <ClInclude Include="third_party\cJSON\cJSON.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="WordHelper.h" />
     <ClInclude Include="WordHelperDlg.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="JsonHelper.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -202,6 +205,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TaskBarView.cpp" />
+    <ClCompile Include="third_party\cJSON\cJSON.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="WordHelper.cpp" />
     <ClCompile Include="WordHelperDlg.cpp" />

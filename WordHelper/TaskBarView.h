@@ -1,5 +1,6 @@
 #pragma once
 
+#include "JsonHelper.h"
 
 // CTaskBarView
 
@@ -28,6 +29,8 @@ private:
 public:
 	afx_msg void OnPaint();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
+
+	CJsonHelper m_jsonRoot;
 };
 
 

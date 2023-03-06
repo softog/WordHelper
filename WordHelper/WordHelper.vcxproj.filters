@@ -16,6 +16,12 @@
     <Filter Include="任务栏">
       <UniqueIdentifier>{a7f493d8-b7b2-4a87-aa71-d47e72a0c508}</UniqueIdentifier>
     </Filter>
+    <Filter Include="third_party">
+      <UniqueIdentifier>{be6e953e-a5f4-4200-9711-c61cfa88b063}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{20625a27-00cf-4c39-8f02-8e4e5c770833}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WordHelper.h">
@@ -39,8 +45,14 @@
     <ClInclude Include="TaskBarView.h">
       <Filter>任务栏</Filter>
     </ClInclude>
+    <ClInclude Include="third_party\cJSON\cJSON.h">
+      <Filter>third_party</Filter>
+    </ClInclude>
     <ClInclude Include="Utils.h">
-      <Filter>头文件</Filter>
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonHelper.h">
+      <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -56,8 +68,14 @@
     <ClCompile Include="TaskBarView.cpp">
       <Filter>任务栏</Filter>
     </ClCompile>
+    <ClCompile Include="third_party\cJSON\cJSON.c">
+      <Filter>third_party</Filter>
+    </ClCompile>
     <ClCompile Include="Utils.cpp">
-      <Filter>源文件</Filter>
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonHelper.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -7,8 +7,7 @@
 #include <string>
 using namespace std;
 #include <cpr/cpr.h>
-
-
+#include "third_party/cJSON/cJSON.h"
 
 
 // CTaskBarView
@@ -34,6 +33,37 @@ BOOL CTaskBarView::Create()
 
     // 字体
     m_font.Attach((HFONT)GetStockObject(DEFAULT_GUI_FONT));
+
+    // 加载单词文件
+    CFile file(_T("Data\\新概念英语第一册.json"), CFile::modeRead);
+    char* pszBuf = new char[file.GetLength() + 1];
+    ZeroMemory(pszBuf, file.GetLength() + 1);
+    file.Read(pszBuf, file.GetLength());
+    file.Close();
+    m_jsonRoot.Parse(pszBuf);
+    delete[] pszBuf;
+    CJsonHelperPtr pJsonList = m_jsonRoot.GetJsonArray("list");
+    if (!pJsonList) {
+        return FALSE;
+    }
+    CJsonHelperPtr pJsonList1 = pJsonList->GetJsonObject( "Lesson1");
+    if (!pJsonList1) {
+        return FALSE;
+    }
+   //  CJsonHelperPtr pJsonList = m_jsonRoot.GetJsonArray("Lesson1");
+   //  if (!pJsonList) {
+   //      return FALSE;
+   //  }
+
+  
+    // string str = item1->Get("key","");
+
+
+    // cJSON* pListJson = cJSON_GetObjectItem(pRootJson, "list");
+    // if (pListJson == NULL) {
+    //     return false;
+    // }
+    //
 
     BOOL bCreate = __super::Create(nullptr, nullptr, WS_CHILD | WS_VISIBLE, CRect(0, 0, 150 * CUtils::GetDPIScale(), rcTaskbar.Height() * CUtils::GetDPIScale()), CWnd::FromHandle(m_hTaskbar), 0, nullptr);
     if (!bCreate) {
