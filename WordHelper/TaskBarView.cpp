@@ -57,8 +57,8 @@ BOOL CTaskBarView::AdjustWindowPos()
     GetWindowRect(rcClient);
 
     SetWindowPos(NULL, rcNotify.left - rcClient.Width(), (rcTaskbar.Height() - rcClient.Height()) / 2, 0, 0, SWP_NOSIZE);
-    Invalidate(FALSE);
 
+    //Invalidate(TRUE);
     //  cpr::Response r = cpr::Get(cpr::Url{ "https://ip.clearseve.com/api" },
     //      cpr::Authentication{ "user", "pass", cpr::AuthMode::BASIC },
     //      cpr::Parameters{ {"anon", "true"}, {"key", "value"} });
@@ -94,8 +94,9 @@ void CTaskBarView::OnPaint()
         nStart = (rcClient.Height() - size.cy * 3) / 2;
     }
 
-    //dc.SetBkMode(TRANSPARENT);
-    dc.SetTextColor(GetSysColor(COLOR_MENUTEXT));
+
+    dc.SetBkMode(TRANSPARENT);
+    dc.SetTextColor(RGB(255, 255, 255));
     dc.DrawText(strWord, CRect(0, nStart, rcClient.Width(), nStart + size.cy), DT_SINGLELINE | DT_LEFT | DT_END_ELLIPSIS);
     dc.DrawText(strDescribe, CRect(0, nStart + size.cy + 1, rcClient.Width(), nStart + size.cy * 3), DT_WORDBREAK | DT_LEFT | DT_END_ELLIPSIS);
 
@@ -111,3 +112,4 @@ void CTaskBarView::OnTimer(UINT_PTR nIDEvent)
     }
     CWnd::OnTimer(nIDEvent);
 }
+
