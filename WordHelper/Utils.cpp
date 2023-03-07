@@ -77,6 +77,54 @@ CAtlStringA CUtils::UnicodeToAnsi(LPCWSTR pszContent)
     return anscii;
 }
 
+CAtlStringW CUtils::AnsiToUnicode(LPCSTR pszContent)
+{
+    CAtlStringW unicode;
+    if (NULL == pszContent) {
+        return unicode;
+    }
+
+    std::shared_ptr<WCHAR> pConvertContent = MultiByteToWideChar(CP_ACP, pszContent);
+    if (NULL == pConvertContent) {
+        return unicode;
+    }
+
+    unicode = pConvertContent.get();
+    return unicode;
+}
+
+CAtlStringW CUtils::UTF8ToUnicode(LPCSTR pszContent)
+{
+    CAtlStringW unicode;
+    if (NULL == pszContent) {
+        return unicode;
+    }
+
+    std::shared_ptr<WCHAR> pConvertContent = MultiByteToWideChar(CP_UTF8, pszContent);
+    if (NULL == pConvertContent) {
+        return unicode;
+    }
+
+    unicode = pConvertContent.get();
+    return unicode;
+}
+
+CAtlStringA CUtils::UnicodeToUTF8(LPCWSTR pszContent)
+{
+    CAtlStringA utf8;
+    if (NULL == pszContent) {
+        return utf8;
+    }
+
+    std::shared_ptr<CHAR> pConvertContent = WideCharToMultiByte(CP_UTF8, pszContent);
+    if (NULL == pConvertContent) {
+        return utf8;
+    }
+
+    utf8 = pConvertContent.get();
+    return utf8;
+}
+
 CAtlStringA CUtils::Int32ToAString(int value, int nRadix)
 {
     CHAR tcResult[35] = { 0 };

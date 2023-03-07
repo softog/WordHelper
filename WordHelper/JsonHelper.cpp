@@ -211,6 +211,12 @@ int CJsonHelper::GetInt32(LPCSTR key, int defaultValue/* = 0*/)
     return defaultValue;
 }
 
+CString CJsonHelper::GetStringWithUTF8(LPCSTR pszKey, LPCWSTR defaultValue)
+{
+    CAtlStringA val = Get(pszKey, CUtils::UnicodeToAnsi(defaultValue));
+    return CUtils::UTF8ToUnicode(val);
+}
+
 BOOL CJsonHelper::GetJsonArrayString(UINT nPos, std::string& strValue)
 {
     if (!IsArray()) {

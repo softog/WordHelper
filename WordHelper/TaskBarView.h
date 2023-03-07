@@ -1,8 +1,15 @@
 #pragma once
 
 #include "JsonHelper.h"
+#include <map>
 
 // CTaskBarView
+struct WORD_PACK {
+	
+
+
+
+};
 
 class CTaskBarView : public CWnd
 {
@@ -31,6 +38,13 @@ public:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 
 	CJsonHelper m_jsonRoot;
+	CJsonHelperPtr m_pJsonList;
+
+	CString m_strWord;
+	CString m_strWordPart;
+	CList<CString> m_listWordMean;
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 };
 
 

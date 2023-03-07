@@ -46,22 +46,11 @@ BOOL CTaskBarView::Create()
     file.Close();
     m_jsonRoot.Parse(pszBuf);
     delete[] pszBuf;
-    CJsonHelperPtr pJsonList = m_jsonRoot.GetJsonArray("list");
-    if (!pJsonList) {
+    m_pJsonList = m_jsonRoot.GetJsonArray("list");
+    if (!m_pJsonList) {
         return FALSE;
     }
-    int nCount = pJsonList->GetArrayCount();
-    for (size_t i = 0; i < nCount; i++)
-    {
-        CJsonHelperPtr jsonItem = pJsonList->GetArrayItemAt(i);
-        string name = jsonItem->Get("name", "");
-        CJsonHelperPtr words = jsonItem->GetJsonArray("words");
 
-        int nWordCount = words->GetArrayCount();
-        for (size_t i = 0; i < nWordCount; i++) {
-
-        }
-    }
 
     // CJsonHelperPtr pJsonList1 = pJsonList->GetJsonObject("Lesson1");
     // if (!pJsonList1) {
@@ -90,6 +79,8 @@ BOOL CTaskBarView::Create()
     AdjustWindowPos();
 
     SetTimer(MY_TIMER_TASKBAR_REPOSITION_ID, MY_TIMER_TASKBAR_REPOSITION, NULL);
+    SetTimer(MY_TIMER_TASKBAR_UPDATE_WORD_ID, MY_TIMER_TASKBAR_UPDATE_WORD, NULL);
+
     return bCreate;
 }
 
@@ -119,6 +110,7 @@ BOOL CTaskBarView::AdjustWindowPos()
 BEGIN_MESSAGE_MAP(CTaskBarView, CWnd)
     ON_WM_PAINT()
     ON_WM_TIMER()
+    ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 
@@ -131,8 +123,8 @@ void CTaskBarView::OnPaint()
     GetWindowRect(rcClient);
 
     CFont* pOldFont = dc.SelectObject(&m_font);
-    CString strWord = _T("test");
-    CString strDescribe = _T("你好你好你好你好你好你好好你好你好你好你好你好你好好你好你好你好你好你好你好好");
+    CString strWord = m_strWord;
+    CString strDescribe = _T("n. 借口；理由；道歉；");
 
     // 计算文字绘制的开始位置
     SIZE size = dc.GetTextExtent(strDescribe);
@@ -151,12 +143,89 @@ void CTaskBarView::OnPaint()
     dc.SelectObject(pOldFont);
 }
 
-
 void CTaskBarView::OnTimer(UINT_PTR nIDEvent)
 {
     if (nIDEvent == MY_TIMER_TASKBAR_REPOSITION_ID) {
         AdjustWindowPos();
     }
+    else if (nIDEvent == MY_TIMER_TASKBAR_UPDATE_WORD_ID) {
+        Invalidate(TRUE);
+
+        static int nClock = 0;
+        static int nWordIndex = 0;
+        static int nWordMeanIndex = 0;
+
+        // 加载单词
+        if (nClock == 0) {
+            CJsonHelperPtr jsonItem = m_pJsonList->GetArrayItemAt(0);
+            string name = jsonItem->Get("name", "");
+            CJsonHelperPtr wordArr = jsonItem->GetJsonArray("words");
+
+            // words / 2
+            int nWordCount = wordArr->GetArrayCount();
+
+            
+            wordArr->GetArrayItemAt(nWordIndex);
+            CJsonHelperPtr pWordItem = wordArr->GetArrayItemAt(nWordIndex);
+            m_strWord = pWordItem->GetStringWithUTF8("word", _T(""));
+
+        }
+
+        // 60 更换单词
+
+
+
+       // 
+       //  int nCount = m_pJsonList->GetArrayCount();
+       // 
+       //  CJsonHelperPtr jsonItem = m_pJsonList->GetArrayItemAt(0);
+       //  string name = jsonItem->Get("name", "");
+       //  CJsonHelperPtr words = jsonItem->GetJsonArray("words");
+       // 
+       //  int nWordCount = words->GetArrayCount();
+
+        // for (size_t i = 0; i < nCount; i++)
+        // {
+        //     CJsonHelperPtr jsonItem = m_pJsonList->GetArrayItemAt(i);
+        //     string name = jsonItem->Get("name", "");
+        //     CJsonHelperPtr words = jsonItem->GetJsonArray("words");
+        // 
+        //     int nWordCount = words->GetArrayCount();
+        //     for (size_t i = 0; i < nWordCount; i++) {
+        // 
+        //     }
+        // 
+        // }
+
+        if (nClock++ > 60) {
+            nClock = 0;
+        }
+    }
     CWnd::OnTimer(nIDEvent);
 }
 
+
+
+BOOL CTaskBarView::OnEraseBkgnd(CDC* pDC)
+{
+    // TODO: 在此添加消息处理程序代码和/或调用默认值
+    //CRect draw_rect;
+    //GetClientRect(draw_rect);
+    //pDC->FillSolidRect(draw_rect, GetSysColor(COLOR_WINDOW));
+    CBrush brush;
+    brush.FromHandle((HBRUSH)GetStockObject(GRAY_BRUSH));
+ 
+    CRect rect;
+    GetClientRect(rect);
+    pDC->FillRect(rect, &brush);
+
+
+    return TRUE;
+    //return CWnd::OnEraseBkgnd(pDC);
+}
+
+
+BOOL CTaskBarView::PreCreateWindow(CREATESTRUCT& cs)
+{
+    return CWnd::PreCreateWindow(cs);
+}

@@ -36,12 +36,12 @@ public:
     CJsonHelperPtr GetArrayItemAt(UINT nPos);
     CAtlStringA Get(LPCSTR key, LPCSTR defaultValue);
     int GetInt32(LPCSTR key, int defaultValue = 0);
+    CString GetStringWithUTF8(LPCSTR pszKey, LPCWSTR defaultValue);
 
 public:
     // Êý×é×Ö·û´®
     BOOL GetJsonArrayString(UINT nPos, std::string& strValue);
 
-    // BOOL GetStringWithUTF8(LPCSTR pszKey, CString& strValue);
 protected:
     LPVOID m_pJsonRoot = NULL;
     BOOL m_bIsDeleteRoot = TRUE;
