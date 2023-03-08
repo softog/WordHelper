@@ -11,7 +11,7 @@ struct WORD_PACK {
 
 };
 
-class CTaskBarView : public CWnd
+class CTaskBarView : public CView
 {
 	DECLARE_DYNAMIC(CTaskBarView)
 
@@ -20,7 +20,7 @@ public:
 	virtual ~CTaskBarView();
 
 public:
-	BOOL Create();
+	BOOL Create(HWND hWnd);
 
 protected:
 	DECLARE_MESSAGE_MAP()
@@ -47,6 +47,7 @@ public:
 
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+	virtual void OnDraw(CDC* /*pDC*/);
 };
 
 

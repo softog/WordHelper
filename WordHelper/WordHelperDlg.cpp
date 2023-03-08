@@ -100,7 +100,7 @@ BOOL CWordHelperDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-	m_wndTaskBarView.Create();
+	m_wndTaskBarView.Create(m_hWnd);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -154,3 +154,13 @@ HCURSOR CWordHelperDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+BOOL CWordHelperDlg::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo)
+{
+
+	if (m_wndTaskBarView.OnCmdMsg(nID, nCode, pExtra, pHandlerInfo))
+		return TRUE;
+
+	return CDialogEx::OnCmdMsg(nID, nCode, pExtra, pHandlerInfo);
+}

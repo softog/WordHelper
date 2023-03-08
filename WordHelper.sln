@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WordHelper", "WordHelper\WordHelper.vcxproj", "{D3FBE65A-B71E-4F46-B683-EF3A3B693A36}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MFCApplication1", "MFCApplication1\MFCApplication1.vcxproj", "{02C83798-BDC2-4446-8BF4-8808B90286EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,6 +23,14 @@ Global
 		{D3FBE65A-B71E-4F46-B683-EF3A3B693A36}.Release|Win32.Build.0 = Release|Win32
 		{D3FBE65A-B71E-4F46-B683-EF3A3B693A36}.Release|x64.ActiveCfg = Release|x64
 		{D3FBE65A-B71E-4F46-B683-EF3A3B693A36}.Release|x64.Build.0 = Release|x64
+		{02C83798-BDC2-4446-8BF4-8808B90286EC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{02C83798-BDC2-4446-8BF4-8808B90286EC}.Debug|Win32.Build.0 = Debug|Win32
+		{02C83798-BDC2-4446-8BF4-8808B90286EC}.Debug|x64.ActiveCfg = Debug|x64
+		{02C83798-BDC2-4446-8BF4-8808B90286EC}.Debug|x64.Build.0 = Debug|x64
+		{02C83798-BDC2-4446-8BF4-8808B90286EC}.Release|Win32.ActiveCfg = Release|Win32
+		{02C83798-BDC2-4446-8BF4-8808B90286EC}.Release|Win32.Build.0 = Release|Win32
+		{02C83798-BDC2-4446-8BF4-8808B90286EC}.Release|x64.ActiveCfg = Release|x64
+		{02C83798-BDC2-4446-8BF4-8808B90286EC}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

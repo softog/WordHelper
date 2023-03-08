@@ -12,7 +12,7 @@ using namespace std;
 
 // CTaskBarView
 
-IMPLEMENT_DYNAMIC(CTaskBarView, CWnd)
+IMPLEMENT_DYNAMIC(CTaskBarView, CView)
 
 CTaskBarView::CTaskBarView()
 {
@@ -23,7 +23,7 @@ CTaskBarView::~CTaskBarView()
 {
 }
 
-BOOL CTaskBarView::Create()
+BOOL CTaskBarView::Create(HWND hWnd)
 {
     m_hTaskbar = ::FindWindow(L"Shell_TrayWnd", NULL); //寻找类名是Shell_TrayWnd的窗口句柄
     m_hNotify = ::FindWindowEx(m_hTaskbar, 0, L"TrayNotifyWnd", NULL);
@@ -71,7 +71,7 @@ BOOL CTaskBarView::Create()
      // }
      //
 
-    BOOL bCreate = __super::Create(nullptr, nullptr, WS_CHILD | WS_VISIBLE, CRect(0, 0, 150 * CUtils::GetDPIScale(), rcTaskbar.Height() * CUtils::GetDPIScale()), CWnd::FromHandle(m_hTaskbar), 0, nullptr);
+    BOOL bCreate = __super::Create(nullptr, nullptr, WS_CHILD | WS_VISIBLE, CRect(0, 0, 150 * CUtils::GetDPIScale(), rcTaskbar.Height() * CUtils::GetDPIScale()), CWnd::FromHandle(hWnd), 0, nullptr);
     if (!bCreate) {
         return FALSE;
     }
@@ -94,7 +94,8 @@ BOOL CTaskBarView::AdjustWindowPos()
     ::GetWindowRect(m_hNotify, rcNotify);
     GetWindowRect(rcClient);
 
-    SetWindowPos(NULL, rcNotify.left - rcClient.Width(), (rcTaskbar.Height() - rcClient.Height()) / 2, 0, 0, SWP_NOSIZE);
+    //SetWindowPos(NULL, rcNotify.left - rcClient.Width(), (rcTaskbar.Height() - rcClient.Height()) / 2, 0, 0, SWP_NOSIZE);
+    SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOSIZE);
 
     //Invalidate(TRUE);
     //  cpr::Response r = cpr::Get(cpr::Url{ "https://ip.clearseve.com/api" },
@@ -107,10 +108,10 @@ BOOL CTaskBarView::AdjustWindowPos()
 }
 
 
-BEGIN_MESSAGE_MAP(CTaskBarView, CWnd)
+BEGIN_MESSAGE_MAP(CTaskBarView, CView)
     ON_WM_PAINT()
     ON_WM_TIMER()
-    ON_WM_ERASEBKGND()
+    //ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 
@@ -143,8 +144,33 @@ void CTaskBarView::OnPaint()
         nStart = (rcClient.Height() - size.cy * 3) / 2;
     }
 
-
     dc.SetBkMode(TRANSPARENT);
+
+    // 擦除
+    {
+        // 设置背景模式为TRANSPARENT
+        dc.SetBkMode(TRANSPARENT);
+
+        // 创建空画刷
+        CBrush brush;
+        brush.CreateStockObject(NULL_BRUSH);
+
+        // 选择空画刷和黑色画笔
+        CBrush* pOldBrush = dc.SelectObject(&brush);
+        CPen pen(PS_SOLID, 1, RGB(0, 0, 0));
+        CPen* pOldPen = dc.SelectObject(&pen);
+
+        // 绘制矩形
+        CRect rect(0, 0, 1000, 1000);
+        dc.Rectangle(&rect);
+
+        // 恢复画刷和画笔
+        dc.SelectObject(pOldBrush);
+        dc.SelectObject(pOldPen);
+    }
+
+
+
     dc.SetTextColor(RGB(255, 255, 255));
     dc.DrawText(strWord, CRect(0, nStart, rcClient.Width(), nStart + size.cy), DT_SINGLELINE | DT_LEFT | DT_END_ELLIPSIS);
     dc.DrawText(strDescribe, CRect(0, nStart + size.cy + 1, rcClient.Width(), nStart + size.cy * 3), DT_WORDBREAK | DT_LEFT | DT_END_ELLIPSIS);
@@ -200,7 +226,7 @@ void CTaskBarView::OnTimer(UINT_PTR nIDEvent)
         }
 
 
-    
+
 
 
         // 60 更换单词
@@ -268,4 +294,10 @@ BOOL CTaskBarView::OnEraseBkgnd(CDC* pDC)
 BOOL CTaskBarView::PreCreateWindow(CREATESTRUCT& cs)
 {
     return CWnd::PreCreateWindow(cs);
+}
+
+
+void CTaskBarView::OnDraw(CDC* /*pDC*/)
+{
+    // TODO: 在此添加专用代码和/或调用基类
 }
