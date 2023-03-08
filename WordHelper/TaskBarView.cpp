@@ -36,7 +36,7 @@ BOOL CTaskBarView::Create()
 
     TCHAR szExePath[MAX_PATH] = { 0 };
     GetModuleFileName(NULL, szExePath, MAX_PATH);
-    CAtlString strPath = CUtils::PathToFolderPath(szExePath);
+    CString strPath = CUtils::PathToFolderPath(szExePath);
 
     // 加载单词文件
     CFile file(strPath + _T("Data\\新概念英语第一册.json"), CFile::modeRead);
@@ -124,10 +124,20 @@ void CTaskBarView::OnPaint()
 
     CFont* pOldFont = dc.SelectObject(&m_font);
     CString strWord = m_strWord;
-    CString strDescribe = _T("n. 借口；理由；道歉；");
+    CString strDescribe;
+    strDescribe.Format(_T("%s %s"), m_strWordPart, m_strWordMeanAll);
 
     // 计算文字绘制的开始位置
     SIZE size = dc.GetTextExtent(strDescribe);
+
+    // 判断是否是可以一次全部显示Mean
+    if (size.cx > rcClient.Width() * 2) {
+        // 宽度不够, 分批显示
+        strDescribe.Format(_T("%s %s"), m_strWordPart, m_strWordMean);
+        size = dc.GetTextExtent(strDescribe);
+    }
+
+    // 计算是两行显示, 还是三行显示
     int nStart = (rcClient.Height() - size.cy * 2) / 2;
     if (size.cx > rcClient.Width()) {
         nStart = (rcClient.Height() - size.cy * 3) / 2;
@@ -149,27 +159,49 @@ void CTaskBarView::OnTimer(UINT_PTR nIDEvent)
         AdjustWindowPos();
     }
     else if (nIDEvent == MY_TIMER_TASKBAR_UPDATE_WORD_ID) {
-        Invalidate(TRUE);
 
         static int nClock = 0;
         static int nWordIndex = 0;
         static int nWordMeanIndex = 0;
+        static int nWordMeanValueIndex = 0;
 
-        // 加载单词
+        CJsonHelperPtr jsonItem = m_pJsonList->GetArrayItemAt(0);
+        string name = jsonItem->Get("name", "");
+        CJsonHelperPtr wordArr = jsonItem->GetJsonArray("words");
+
+        // 加载新单词, 本章节或下一章节单词
         if (nClock == 0) {
-            CJsonHelperPtr jsonItem = m_pJsonList->GetArrayItemAt(0);
-            string name = jsonItem->Get("name", "");
-            CJsonHelperPtr wordArr = jsonItem->GetJsonArray("words");
+            // nWordIndex = 0;
+        }
 
-            // words / 2
-            int nWordCount = wordArr->GetArrayCount();
+        wordArr->GetArrayItemAt(nWordIndex);
 
-            
-            wordArr->GetArrayItemAt(nWordIndex);
-            CJsonHelperPtr pWordItem = wordArr->GetArrayItemAt(nWordIndex);
-            m_strWord = pWordItem->GetStringWithUTF8("word", _T(""));
+        CJsonHelperPtr pWordItem = wordArr->GetArrayItemAt(nWordIndex);
+        m_strWord = pWordItem->GetStringWithUTF8("word", _T(""));
+        CJsonHelperPtr meanArr = pWordItem->GetJsonArray("means");
+
+
+        if (nClock != 0) {
+            CJsonHelperPtr meanItem = meanArr->GetArrayItemAt(nWordMeanIndex);
+            m_strWordPart = meanItem->GetStringWithUTF8("part", _T(""));
+
+            std::vector<CString> listWordMean;
+            meanItem->GetJsonArrayStringWithUTF8("means", listWordMean);
+            CString strTemp;
+            for (size_t i = 0; i < listWordMean.size(); i++)
+            {
+                if (i == nWordMeanValueIndex) {
+                    m_strWordMean = listWordMean.at(i);
+                }
+                strTemp += listWordMean.at(i) + _T("；");
+            }
+            m_strWordMeanAll = strTemp;
 
         }
+
+
+    
+
 
         // 60 更换单词
 
@@ -200,6 +232,8 @@ void CTaskBarView::OnTimer(UINT_PTR nIDEvent)
         if (nClock++ > 60) {
             nClock = 0;
         }
+        Invalidate(TRUE);
+
     }
     CWnd::OnTimer(nIDEvent);
 }
@@ -212,16 +246,22 @@ BOOL CTaskBarView::OnEraseBkgnd(CDC* pDC)
     //CRect draw_rect;
     //GetClientRect(draw_rect);
     //pDC->FillSolidRect(draw_rect, GetSysColor(COLOR_WINDOW));
-    CBrush brush;
-    brush.FromHandle((HBRUSH)GetStockObject(GRAY_BRUSH));
- 
-    CRect rect;
-    GetClientRect(rect);
-    pDC->FillRect(rect, &brush);
-
-
-    return TRUE;
+    //CBrush brush;
+    //brush.FromHandle((HBRUSH)GetStockObject(GRAY_BRUSH));
+    //
+    //CRect rect;
+    //GetClientRect(rect);
+    //pDC->FillRect(rect, &brush);
+    //
+    //
+    //return TRUE;
     //return CWnd::OnEraseBkgnd(pDC);
+
+
+    CRect rect;
+    GetClientRect(&rect);
+    pDC->SelectObject((HBRUSH)GetStockObject(NULL_BRUSH));
+    return pDC->PatBlt(0, 0, rect.Width(), rect.Height(), PATCOPY);
 }
 
 

@@ -53,7 +53,7 @@ BOOL CJsonHelper::Parse(LPCSTR pszJson)
     return TRUE;
 }
 
-CAtlStringA CJsonHelper::Encode(BOOL bIsFormat/* = FALSE*/)
+CStringA CJsonHelper::Encode(BOOL bIsFormat/* = FALSE*/)
 {
     char* pszPrintJsonTmp = NULL;
     if (bIsFormat) {
@@ -68,7 +68,7 @@ CAtlStringA CJsonHelper::Encode(BOOL bIsFormat/* = FALSE*/)
         return "";
     }
 
-    CAtlStringA strRefJson;
+    CStringA strRefJson;
     strRefJson = pszPrintJsonTmp;
     delete pszPrintJsonTmp;
 
@@ -167,9 +167,9 @@ CJsonHelperPtr CJsonHelper::GetArrayItemAt(UINT nPos)
     cJSON* item = cJSON_GetArrayItem((cJSON*)m_pJsonRoot, nPos);
     return std::make_shared<CJsonHelper>(item);
 }
-CAtlStringA CJsonHelper::Get(LPCSTR key, LPCSTR defaultValue)
+CStringA CJsonHelper::Get(LPCSTR key, LPCSTR defaultValue)
 {
-    CAtlStringA strRefValue = defaultValue;
+    CStringA strRefValue = defaultValue;
 
     if (!m_pJsonRoot) {
         return strRefValue;
@@ -213,7 +213,7 @@ int CJsonHelper::GetInt32(LPCSTR key, int defaultValue/* = 0*/)
 
 CString CJsonHelper::GetStringWithUTF8(LPCSTR pszKey, LPCWSTR defaultValue)
 {
-    CAtlStringA val = Get(pszKey, CUtils::UnicodeToAnsi(defaultValue));
+    CStringA val = Get(pszKey, CUtils::UnicodeToAnsi(defaultValue));
     return CUtils::UTF8ToUnicode(val);
 }
 
@@ -225,5 +225,32 @@ BOOL CJsonHelper::GetJsonArrayString(UINT nPos, std::string& strValue)
 
     cJSON* item = cJSON_GetArrayItem((cJSON*)m_pJsonRoot, nPos);
     strValue = item->valuestring;
+    return TRUE;
+}
+
+BOOL CJsonHelper::GetJsonArrayStringWithUTF8(UINT nPos, CString& strValue)
+{
+    if (!IsArray()) {
+        return FALSE;
+    }
+
+    cJSON* item = cJSON_GetArrayItem((cJSON*)m_pJsonRoot, nPos);
+    strValue = CUtils::UTF8ToUnicode(item->valuestring);
+    return TRUE;
+}
+
+BOOL CJsonHelper::GetJsonArrayStringWithUTF8(LPCSTR key, std::vector<CString>& listString)
+{
+    CJsonHelperPtr pJson = GetJsonArray(key);
+    if (pJson == NULL) {
+        return FALSE;
+    }
+
+    UINT nCount = pJson->GetArrayCount();
+    for (size_t i = 0; i < nCount; i++)
+    {
+        cJSON* item = cJSON_GetArrayItem((cJSON*)pJson->m_pJsonRoot, i);
+        listString.push_back(CUtils::UTF8ToUnicode(item->valuestring));
+    }
     return TRUE;
 }

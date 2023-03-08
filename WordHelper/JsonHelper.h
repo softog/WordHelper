@@ -2,6 +2,7 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 
 class CJsonHelper;
 typedef std::shared_ptr<CJsonHelper> CJsonHelperPtr;
@@ -18,7 +19,7 @@ public:
     BOOL CreateJsonObject();
     BOOL CreateJsonArray();
     BOOL Parse(LPCSTR pszJson);
-    CAtlStringA Encode(BOOL bIsFormat = FALSE);
+    CStringA Encode(BOOL bIsFormat = FALSE);
     BOOL IsArray();
     UINT GetArrayCount();
     // 是否存在key
@@ -34,13 +35,15 @@ public:
     CJsonHelperPtr GetJsonObject(LPCSTR key);
     CJsonHelperPtr GetJsonArray(LPCSTR key);
     CJsonHelperPtr GetArrayItemAt(UINT nPos);
-    CAtlStringA Get(LPCSTR key, LPCSTR defaultValue);
+    CStringA Get(LPCSTR key, LPCSTR defaultValue);
     int GetInt32(LPCSTR key, int defaultValue = 0);
     CString GetStringWithUTF8(LPCSTR pszKey, LPCWSTR defaultValue);
 
 public:
     // 数组字符串
     BOOL GetJsonArrayString(UINT nPos, std::string& strValue);
+    BOOL GetJsonArrayStringWithUTF8(UINT nPos, CString& strValue);
+    BOOL GetJsonArrayStringWithUTF8(LPCSTR key, std::vector<CString>& listString);
 
 protected:
     LPVOID m_pJsonRoot = NULL;

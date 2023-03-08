@@ -42,7 +42,9 @@ public:
 
 	CString m_strWord;
 	CString m_strWordPart;
-	CList<CString> m_listWordMean;
+	CString m_strWordMean;
+	CString m_strWordMeanAll;
+
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 };

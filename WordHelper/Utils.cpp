@@ -49,9 +49,9 @@ BOOL CUtils::SetProcessDPIAware()
 
 }
 
-CAtlString CUtils::PathToFolderPath(LPCTSTR pszFullPath)
+CString CUtils::PathToFolderPath(LPCTSTR pszFullPath)
 {
-    CAtlString strTemp(pszFullPath);
+    CString strTemp(pszFullPath);
     int nPos = -1;
     nPos = strTemp.ReverseFind(_T('\\'));
     if (-1 == nPos)
@@ -61,9 +61,9 @@ CAtlString CUtils::PathToFolderPath(LPCTSTR pszFullPath)
     return strTemp.Left(nPos + 1);
 }
 
-CAtlStringA CUtils::UnicodeToAnsi(LPCWSTR pszContent)
+CStringA CUtils::UnicodeToAnsi(LPCWSTR pszContent)
 {
-    CAtlStringA anscii;
+    CStringA anscii;
     if (NULL == pszContent) {
         return anscii;
     }
@@ -77,9 +77,9 @@ CAtlStringA CUtils::UnicodeToAnsi(LPCWSTR pszContent)
     return anscii;
 }
 
-CAtlStringW CUtils::AnsiToUnicode(LPCSTR pszContent)
+CStringW CUtils::AnsiToUnicode(LPCSTR pszContent)
 {
-    CAtlStringW unicode;
+    CStringW unicode;
     if (NULL == pszContent) {
         return unicode;
     }
@@ -93,9 +93,9 @@ CAtlStringW CUtils::AnsiToUnicode(LPCSTR pszContent)
     return unicode;
 }
 
-CAtlStringW CUtils::UTF8ToUnicode(LPCSTR pszContent)
+CStringW CUtils::UTF8ToUnicode(LPCSTR pszContent)
 {
-    CAtlStringW unicode;
+    CStringW unicode;
     if (NULL == pszContent) {
         return unicode;
     }
@@ -109,9 +109,9 @@ CAtlStringW CUtils::UTF8ToUnicode(LPCSTR pszContent)
     return unicode;
 }
 
-CAtlStringA CUtils::UnicodeToUTF8(LPCWSTR pszContent)
+CStringA CUtils::UnicodeToUTF8(LPCWSTR pszContent)
 {
-    CAtlStringA utf8;
+    CStringA utf8;
     if (NULL == pszContent) {
         return utf8;
     }
@@ -125,7 +125,7 @@ CAtlStringA CUtils::UnicodeToUTF8(LPCWSTR pszContent)
     return utf8;
 }
 
-CAtlStringA CUtils::Int32ToAString(int value, int nRadix)
+CStringA CUtils::Int32ToAString(int value, int nRadix)
 {
     CHAR tcResult[35] = { 0 };
     _itoa_s(value, tcResult, 35, nRadix);

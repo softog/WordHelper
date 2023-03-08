@@ -8,12 +8,12 @@ public:
     // 设置DPI缩放
     static BOOL SetProcessDPIAware();
 
-    static CAtlString PathToFolderPath(LPCTSTR pszFullPath);
-    static CAtlStringA UnicodeToAnsi(LPCWSTR pszContent);
-    static CAtlStringW AnsiToUnicode(LPCSTR pszContent);
-    static CAtlStringW UTF8ToUnicode(LPCSTR pszContent);
-    static CAtlStringA UnicodeToUTF8(LPCWSTR pszContent);
-    static CAtlStringA Int32ToAString(int value, int nRadix = 10);
+    static CString PathToFolderPath(LPCTSTR pszFullPath);
+    static CStringA UnicodeToAnsi(LPCWSTR pszContent);
+    static CStringW AnsiToUnicode(LPCSTR pszContent);
+    static CStringW UTF8ToUnicode(LPCSTR pszContent);
+    static CStringA UnicodeToUTF8(LPCWSTR pszContent);
+    static CStringA Int32ToAString(int value, int nRadix = 10);
     static int StringToInt32(LPCSTR pszValue, int nRadix = 10);
 };
 
